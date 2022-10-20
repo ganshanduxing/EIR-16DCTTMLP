@@ -43,35 +43,20 @@ def deEntropy(acall, dcall, row, col, type, N=8, QF=100):
 
 
 def Gen_cipher_images(QF, Image_num=1):
-    cipherimage_Y = []
-    cipherimage_Cb = []
-    cipherimage_Cr = []
 
     img_size = loadImgSizes()
+    srcFiles = glob.glob('../data/plainimages/*.jpg')
 
     for k in tqdm.tqdm([i for i in range(Image_num)]):
         dcallY, acallY, dcallCb, acallCb, dcallCr, acallCr = loadEncBit('../data/JPEGBitStream', k)
         row, col = img_size[k]
         row = int(32 * np.ceil(row / 32))
         col = int(32 * np.ceil(col / 32))
-        cipherimage_Y.append(deEntropy(acallY, dcallY, row, col, 'Y', QF=QF))
-        cipherimage_Cb.append(deEntropy(acallCb, dcallCb, int(row / 2), int(col / 2), 'C', QF=QF))
-        cipherimage_Cr.append(deEntropy(acallCr, dcallCr, int(row / 2), int(col / 2), 'C', QF=QF))
+        cipher_Y = deEntropy(acallY, dcallY, row, col, 'Y', QF=QF)
+        cipher_cb = deEntropy(acallCb, dcallCb, int(row / 2), int(col / 2), 'C', QF=QF)
+        cipher_cr = deEntropy(acallCr, dcallCr, int(row / 2), int(col / 2), 'C', QF=QF)
 
-    np.save("../data/cipherimageNPYFiles/cipherimage_Y.npy", cipherimage_Y)
-    np.save("../data/cipherimageNPYFiles/cipherimage_Cb.npy", cipherimage_Cb)
-    np.save("../data/cipherimageNPYFiles/cipherimage_Cr.npy", cipherimage_Cr)
-
-    srcFiles = glob.glob('../data/plainimages/*.jpg')
-    cipherimage_all = []
-    for k in tqdm.tqdm([i for i in range(Image_num)]):
-        row, col = img_size[k]
-        row = int(32 * np.ceil(row / 32))
-        col = int(32 * np.ceil(col / 32))
         cipherimage = np.zeros([row, col, 3])
-        cipher_Y = cipherimage_Y[k]
-        cipher_cb = cipherimage_Cb[k]
-        cipher_cr = cipherimage_Cr[k]
         cipher_cb = cv2.resize(cipher_cb,
                                (col, row),
                                interpolation=cv2.INTER_CUBIC)
@@ -84,7 +69,9 @@ def Gen_cipher_images(QF, Image_num=1):
         cipherimage = np.round(cipherimage)
         cipherimage = cipherimage.astype(np.uint8)
         cipherimage = ycbcr2rgb(cipherimage)
-        cipherimage_all.append(cipherimage)
+
+        np.save(f'../data/cipherimageNPYFiles/cipherimages_{k}.npy', cipherimage)
+
         merged = cv2.merge([cipherimage[:, :, 2], cipherimage[:, :, 1], cipherimage[:, :, 0]])
         cv2.imwrite('../data/cipherimages/{}'.format(srcFiles[k].split("/")[-1].split("\\")[-1]), merged,
                     [int(cv2.IMWRITE_JPEG_QUALITY), QF])
