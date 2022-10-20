@@ -45,7 +45,7 @@ model = Net(seq_len=64,
             n_classes=100, )
 
 optimizer = torch.optim.Adam(params=model.parameters(), lr=0.0001)
-scheduler = WarmupMultiStepLR(optimizer=optimizer, milestones=[20, 60])
+scheduler = WarmupMultiStepLR(optimizer=optimizer, milestones=[60, 70])
 
 # train model
 train_stage(model, train_loader, optimizer, scheduler)
