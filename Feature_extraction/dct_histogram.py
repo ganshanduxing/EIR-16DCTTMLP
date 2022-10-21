@@ -19,18 +19,18 @@ AC_histgram_dimension = len(AC_bin_interval) - 1
 
 def extract_feature(dc, ac, size, type, QF, N=8):
     _, acarr = jacdecColor(ac, type)
-    _, dcarr = jdcdecColor(dc, type, 'N')
+    _, dcarr = jdcdecColor(dc, type)
     acarr = np.array(acarr)
     dcarr = np.array(dcarr)
 
     if type == 'Y':
         row, col = size
-        row = int(16 * np.ceil(row / 16))
-        col = int(16 * np.ceil(col / 16))
+        row = int(32 * np.ceil(row / 32))
+        col = int(32 * np.ceil(col / 32))
     else:
         row, col = size
-        row = int(8 * np.ceil(row / 16))
-        col = int(8 * np.ceil(col / 16))
+        row = int(16 * np.ceil(row / 32))
+        col = int(16 * np.ceil(col / 32))
 
     Eob = np.where(acarr == 999)
     Eob = Eob[0]
