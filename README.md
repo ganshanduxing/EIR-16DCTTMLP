@@ -4,3 +4,6 @@ This project is the implementation code of the paper 《A privacy-preserving ima
 # 项目声明 Project Statement
 本项目的作者及单位：<br/>
 The author and affiliation of this project:
+项目名称（Project Name）: EIR-16DCTTMLP
+项目作者（Author）: Zhixun Lu
+作者单位（Affiliation）: 暨南大学信息科学技术学院（College of Information Science and Technology, Jinan University）
